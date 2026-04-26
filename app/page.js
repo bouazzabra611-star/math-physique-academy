@@ -1,4 +1,5 @@
 "use client";
+import PDFViewer from '../components/PDFViewer';
 import React, { useState, useEffect, createContext, useContext } from "react";
 import {
   Atom, Menu, X, Globe, Sparkles, ArrowRight,
@@ -1003,7 +1004,8 @@ const Hero = () => {
                 </div>
 
                 {/* بطاقة التمارين */}
-                <div className="group bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg hover:shadow-2xl hover:shadow-amber-500/50 hover:scale-105 transition-all cursor-pointer mt-4">
+                <div className="group 
+                g-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg hover:shadow-2xl hover:shadow-amber-500/50 hover:scale-105 transition-all cursor-pointer mt-4">
                   <div className="text-4xl mb-2">✏️</div>
                   <div className="font-black text-lg">
                     {lang === "fr" ? "Exercices" : "تمارين"}
@@ -2486,7 +2488,7 @@ const CoursePage = ({ levelId, subjectId, courseId }) => {
   const { navigate } = useRouter();
   const [activeSection, setActiveSection] = useState("intro");
   const [bookmarked, setBookmarked] = useState(false);
-
+  const [showPDF, setShowPDF] = useState(false);
   // 🔍 البحث عن بيانات الدرس
   const allCourses = COURSES_DATA[subjectId]?.[levelId] || [];
   const courseIndex = allCourses.findIndex((c) => c.id === courseId);
@@ -2867,11 +2869,33 @@ const CoursePage = ({ levelId, subjectId, courseId }) => {
 
               {/* أزرار الإجراءات */}
               <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-2">
-                {/* تحميل PDF */}
-                <button className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r ${style.gradient} text-white text-sm font-bold shadow-md hover:shadow-xl transition-all`}>
-                  <Download size={16} />
-                  {t.coursePage.actions.download}
-                </button>
+                {/* تحميل PDF + عارض */}
+<button
+  onClick={() => setShowPDF(!showPDF)}
+  className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r ${style.gradient} text-white text-sm font-bold shadow-md hover:shadow-xl transition-all`}
+>
+  <Download size={16} />
+  {showPDF ? (lang === 'ar' ? 'إخفاء PDF' : 'Masquer PDF') : t.coursePage.actions.download}
+</button>
+
+{showPDF && (
+  <div className="mt-3">
+    <PDFViewer
+      fileUrl={`/pdfs/${subjectId}/${courseId}.pdf`}
+      title={lang === 'ar' ? course?.ar : course?.fr}
+    />
+  </div>
+)}
+
+{/* عارض PDF */}
+{showPDF && (
+  <div className="mt-3">
+    <PDFViewer
+      fileUrl="/pdfs/cours.pdf"
+      title={courseId}
+    />
+  </div>
+)}
 
                 {/* مفضلة */}
                 <button
