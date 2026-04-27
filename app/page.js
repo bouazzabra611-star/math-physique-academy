@@ -564,6 +564,47 @@ const translations = {
    📚 بنك بيانات الدروس (Mock Data)
    منظم حسب المستوى والمادة - يمكن لاحقاً استبداله بـ API
 ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   📝 بنك بيانات الامتحانات الوطنية
+═══════════════════════════════════════════════════════════════ */
+const EXAMS_DATA = {
+  "2bac": [
+    {
+      id: "exam-2bac-2024", year: 2024, session: "normale",
+      math: { fr: "Mathématiques - Session Normale 2024", ar: "الرياضيات - الدورة العادية 2024", file: "/pdfs/exams/2bac/math-2024-normale.pdf" },
+      physics: { fr: "Physique-Chimie - Session Normale 2024", ar: "الفيزياء والكيمياء - الدورة العادية 2024", file: "/pdfs/exams/2bac/physics-2024-normale.pdf" }
+    },
+    {
+      id: "exam-2bac-2023", year: 2023, session: "normale",
+      math: { fr: "Mathématiques - Session Normale 2023", ar: "الرياضيات - الدورة العادية 2023", file: "/pdfs/exams/2bac/math-2023-normale.pdf" },
+      physics: { fr: "Physique-Chimie - Session Normale 2023", ar: "الفيزياء والكيمياء - الدورة العادية 2023", file: "/pdfs/exams/2bac/physics-2023-normale.pdf" }
+    },
+    {
+      id: "exam-2bac-2022", year: 2022, session: "normale",
+      math: { fr: "Mathématiques - Session Normale 2022", ar: "الرياضيات - الدورة العادية 2022", file: "/pdfs/exams/2bac/math-2022-normale.pdf" },
+      physics: { fr: "Physique-Chimie - Session Normale 2022", ar: "الفيزياء والكيمياء - الدورة العادية 2022", file: "/pdfs/exams/2bac/physics-2022-normale.pdf" }
+    },
+  ],
+  "1bac": [
+    {
+      id: "exam-1bac-2024", year: 2024, session: "normale",
+      math: { fr: "Mathématiques - Session Normale 2024", ar: "الرياضيات - الدورة العادية 2024", file: "/pdfs/exams/1bac/math-2024-normale.pdf" },
+      physics: { fr: "Physique-Chimie - Session Normale 2024", ar: "الفيزياء والكيمياء - الدورة العادية 2024", file: "/pdfs/exams/1bac/physics-2024-normale.pdf" }
+    },
+    {
+      id: "exam-1bac-2023", year: 2023, session: "normale",
+      math: { fr: "Mathématiques - Session Normale 2023", ar: "الرياضيات - الدورة العادية 2023", file: "/pdfs/exams/1bac/math-2023-normale.pdf" },
+      physics: { fr: "Physique-Chimie - Session Normale 2023", ar: "الفيزياء والكيمياء - الدورة العادية 2023", file: "/pdfs/exams/1bac/physics-2023-normale.pdf" }
+    },
+  ],
+  "tcs": [
+    {
+      id: "exam-tcs-2024", year: 2024, session: "normale",
+      math: { fr: "Mathématiques - Session Normale 2024", ar: "الرياضيات - الدورة العادية 2024", file: "/pdfs/exams/tcs/math-2024-normale.pdf" },
+      physics: { fr: "Physique-Chimie - Session Normale 2024", ar: "الفيزياء والكيمياء - الدورة العادية 2024", file: "/pdfs/exams/tcs/physics-2024-normale.pdf" }
+    },
+  ],
+};
 const COURSES_DATA = {
   math: {
     "1apic": [
@@ -793,12 +834,19 @@ const Navbar = () => {
                 onClick={() => {
                   if (item.id === "quiz") {
                     navigate({ name: "quiz" });
-                  } else {
-                    navigate({ name: "home" });
-                    setTimeout(() => {
-                      document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
-                    }, 100);
-                  }
+                  } else if (item.id === "exams") {
+  navigate({ name: "home" });
+  setTimeout(() => {
+    document.getElementById("levels")?.scrollIntoView({ behavior: "smooth" });
+  }, 100);
+} else if (item.id === "exams") {
+  navigate({ name: "exams" });
+} else {
+  navigate({ name: "home" });
+  setTimeout(() => {
+    document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
+  }, 100);
+}
                 }}
                 className="relative px-4 py-2 text-sm font-semibold text-slate-700 hover:text-blue-700 transition-colors group"
               >
@@ -2866,8 +2914,7 @@ const CoursePage = ({ levelId, subjectId, courseId }) => {
                   ))}
                 </nav>
               </div>
-
-              {/* أزرار الإجراءات */}
+{/* أزرار الإجراءات */}
               <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-2">
                 {/* تحميل PDF + عارض */}
 <button
@@ -2887,15 +2934,7 @@ const CoursePage = ({ levelId, subjectId, courseId }) => {
   </div>
 )}
 
-{/* عارض PDF */}
-{showPDF && (
-  <div className="mt-3">
-    <PDFViewer
-      fileUrl="/pdfs/cours.pdf"
-      title={courseId}
-    />
-  </div>
-)}
+
 
                 {/* مفضلة */}
                 <button
@@ -3004,7 +3043,195 @@ const CoursePage = ({ levelId, subjectId, courseId }) => {
 /* ═══════════════════════════════════════════════════════════════
    🎯 صفحة Quiz التفاعلي الكاملة (QuizPage)
    3 حالات: شاشة البداية → الأسئلة → النتيجة
+═══════════════════════════════════════════════════════════════ */ /* ═══════════════════════════════════════════════════════════════
+   📝 صفحة الامتحانات الوطنية (ExamsPage)
 ═══════════════════════════════════════════════════════════════ */
+const ExamsPage = () => {
+  const { lang } = useLang();
+  const [selectedLevel, setSelectedLevel] = useState("2bac");
+  const [selectedSubject, setSelectedSubject] = useState("math");
+  const [openPDF, setOpenPDF] = useState(null);
+
+  const levels = [
+    { id: "2bac", label: "2 BAC" },
+    { id: "1bac", label: "1 BAC" },
+    { id: "tcs",  label: "TCS" },
+  ];
+
+  const subjects = [
+    { id: "math",    label: lang === "ar" ? "الرياضيات" : "Mathématiques", Icon: Calculator, gradient: "from-blue-600 to-indigo-600" },
+    { id: "physics", label: lang === "ar" ? "الفيزياء والكيمياء" : "Physique-Chimie", Icon: FlaskConical, gradient: "from-violet-600 to-pink-600" },
+  ];
+
+  const exams = EXAMS_DATA[selectedLevel] || [];
+  const activeSubject = subjects.find(s => s.id === selectedSubject);
+
+  return (
+    <div className="min-h-screen">
+
+      {/* ═══ رأس الصفحة ═══ */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 text-white py-14 md:py-20">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl"></div>
+          <div className="absolute top-10 right-[15%] text-9xl font-black text-white/5 rotate-12">📝</div>
+        </div>
+
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 mb-4">
+            <FileText size={14} className="text-blue-300" />
+            <span className="text-xs font-bold">
+              {lang === "ar" ? "الامتحانات الوطنية" : "Examens Nationaux"}
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black mb-4">
+            {lang === "ar" ? "امتحانات السنوات السابقة" : "Examens des années précédentes"}
+          </h1>
+          <p className="text-blue-200 text-base md:text-lg max-w-2xl mx-auto">
+            {lang === "ar"
+              ? "جميع الامتحانات الوطنية مع التصحيحات — قابلة للعرض والتحميل"
+              : "Tous les examens nationaux avec corrections — consultables et téléchargeables"}
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ فلاتر المستوى والمادة ═══ */}
+      <section className="bg-white border-b border-slate-200 sticky top-16 md:top-20 z-30 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap gap-3 items-center justify-between">
+
+          {/* اختيار المستوى */}
+          <div className="flex gap-1.5">
+            {levels.map(lv => (
+              <button
+                key={lv.id}
+                onClick={() => { setSelectedLevel(lv.id); setOpenPDF(null); }}
+                className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                  selectedLevel === lv.id
+                    ? "bg-gradient-to-r from-slate-800 to-blue-900 text-white shadow-lg"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {lv.label}
+              </button>
+            ))}
+          </div>
+
+          {/* اختيار المادة */}
+          <div className="flex gap-1.5">
+            {subjects.map(sub => (
+              <button
+                key={sub.id}
+                onClick={() => { setSelectedSubject(sub.id); setOpenPDF(null); }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                  selectedSubject === sub.id
+                    ? `bg-gradient-to-r ${sub.gradient} text-white shadow-lg`
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                <sub.Icon size={15} />
+                {sub.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ قائمة الامتحانات ═══ */}
+      <section className="py-10 md:py-14 bg-gradient-to-br from-slate-50 to-blue-50/30 min-h-[500px]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {exams.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="text-6xl mb-4">📭</div>
+              <p className="text-slate-500 font-semibold">
+                {lang === "ar" ? "لا توجد امتحانات لهذا المستوى بعد" : "Aucun examen disponible pour ce niveau"}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              {exams.map((exam) => {
+                const examData = exam[selectedSubject];
+                const isOpen = openPDF === exam.id;
+                const sub = subjects.find(s => s.id === selectedSubject);
+
+                return (
+                  <div key={exam.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-md">
+
+                    {/* رأس الامتحان */}
+                    <div className="flex items-center justify-between p-5 md:p-6">
+                      <div className="flex items-center gap-4">
+
+                        {/* أيقونة السنة */}
+                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${sub.gradient} flex flex-col items-center justify-center shadow-lg text-white`}>
+                          <span className="text-xs font-bold opacity-80">
+                            {lang === "ar" ? "دورة" : "Bac"}
+                          </span>
+                          <span className="text-lg font-black">{exam.year}</span>
+                        </div>
+
+                        {/* معلومات */}
+                        <div>
+                          <h3 className="font-black text-slate-800 text-base md:text-lg">
+                            {lang === "ar" ? examData.ar : examData.fr}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
+                              ✓ {lang === "ar" ? "مع التصحيح" : "Avec correction"}
+                            </span>
+                            <span className="text-xs text-slate-400 font-semibold">PDF</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* أزرار العرض والتحميل */}
+                      <div className="flex items-center gap-2">
+                        {/* تحميل مباشر */}
+                        
+                        <a href={examData.file}
+                          download
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
+                        >
+                          <Download size={14} />
+                          {lang === "ar" ? "تحميل" : "Télécharger"}
+                        </a>
+
+                        {/* عرض في PDFViewer */}
+                        <button
+                          onClick={() => setOpenPDF(isOpen ? null : exam.id)}
+                          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                            isOpen
+                              ? `bg-gradient-to-r ${sub.gradient} text-white shadow-md`
+                              : "bg-blue-50 hover:bg-blue-100 text-blue-700"
+                          }`}
+                        >
+                          <Eye size={14} />
+                          {isOpen
+                            ? (lang === "ar" ? "إخفاء" : "Masquer")
+                            : (lang === "ar" ? "عرض" : "Consulter")}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* عارض PDF */}
+                    {isOpen && (
+                      <div className="px-5 pb-5 md:px-6 md:pb-6 border-t border-slate-100 pt-4">
+                        <PDFViewer
+                          fileUrl={examData.file}
+                          title={lang === "ar" ? examData.ar : examData.fr}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+};
+
 const QuizPage = () => {
   const { lang, t } = useLang();
   const { navigate } = useRouter();
@@ -3983,7 +4210,9 @@ export default function App() {
         return <SubjectPage levelId={page.levelId} subjectId={page.subjectId} />;
       case "course":
         return <CoursePage levelId={page.levelId} subjectId={page.subjectId} courseId={page.courseId} />;
-      case "quiz":
+      case "exams":
+  return <ExamsPage />;
+        case "quiz":
         return <QuizPage />;
       case "dashboard":
         return <DashboardPage user={user} setUser={setUser} />;
