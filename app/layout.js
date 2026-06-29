@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: "Math & Physique Academy | أكاديمية الرياضيات والفيزياء",
@@ -20,7 +21,10 @@ export default function RootLayout({ children }) {
           gtag('config', 'G-KRLWPLB8Y3');
         `}} />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
